@@ -10,8 +10,8 @@ export const environment = {
 
 urlSettings.Settings = {
   apiProtocol: 'https',
-  apiHost: 'data.fixer.io',
-  apiEndPoint: 'api/latest',
+  apiHost: 'api.fastforex.io',
+  apiEndPoint: '',
   language: 'ar',
 
   // apiProtocol: "https",

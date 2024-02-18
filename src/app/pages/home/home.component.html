@@ -1,2 +1,18 @@
-<h1>Currency Exchanger</h1>
-<app-exchanger></app-exchanger>
+<section class="container">
+  <h1>Currency Exchanger</h1>
+  <app-exchanger></app-exchanger>
+
+  <h1>Most Popular Currencies</h1>
+  <section id="popular-currencies">
+    @for (currency of currenciesList | keyvalue | slice : 0:9; track $index) {
+
+    <div>
+      <h3>
+        {{ currency.value }}
+      </h3>
+
+      <p>{{ currency.key }}</p>
+    </div>
+    }
+  </section>
+</section>
