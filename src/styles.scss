@@ -1,1 +1,94 @@
-/* You can add global styles to this file, and also import other style files */
+@import url("https://fonts.googleapis.com/css2?family=Cairo:wght@200;300;400;500;600;700;800;900;1000&family=Gulzar&display=swap");
+
+/* global styles and  varibles */
+:root {
+  --main-color: 135, 30, 53;
+
+  /* transtion duration */
+  --main-transtion-duration: 0.3s;
+  /* border radious */
+  --main-border-radious: 0.5rem;
+}
+
+html {
+  font-family: "Cairo", sans-serif;
+}
+
+@media (max-width: 491px) {
+  html {
+    font-size: 12px;
+  }
+}
+
+*,
+p {
+  box-sizing: border-box;
+  margin: 0;
+  padding: 0;
+}
+
+*::selection {
+  background-color: rgb(var(--main-color));
+  color: #fff;
+}
+
+body {
+  scroll-behavior: smooth;
+  overflow-x: hidden;
+}
+
+ul {
+  list-style: none;
+  padding: 0;
+  margin: 0;
+}
+
+a {
+  text-decoration: none;
+}
+
+input:focus,
+textarea:focus,
+select:focus {
+  outline: none !important;
+  box-shadow: none !important;
+}
+
+button:focus-visible {
+  outline: none;
+}
+
+/* global classes */
+.main-transition {
+  transition-duration: var(--main-transtion-duration);
+}
+
+.main-color {
+  color: rgb(var(--main-color));
+}
+
+.main-bg-color {
+  background-color: rgb(var(--main-color));
+}
+
+/* scroll styles */
+
+::-webkit-scrollbar {
+  width: 10px;
+}
+
+/* Track */
+::-webkit-scrollbar-track {
+  background: #ebf2ff;
+}
+
+/* Handle */
+::-webkit-scrollbar-thumb {
+  background: rgb(var(--gold-color));
+  border-radius: 3px;
+}
+
+/* Handle on hover */
+::-webkit-scrollbar-thumb:hover {
+  background: #cfbe99;
+}

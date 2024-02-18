@@ -1,0 +1,19 @@
+<nav class="nav-container">
+  <a routerLink="home">
+    <img src="assets/images/logo.webp" class="logo" alt="logo" />
+  </a>
+
+  <ul class="navbar-nav">
+    @for (nav of navItems; track $index) {
+
+    <li class="nav-item">
+      <a
+        class="nav-link main-bg-color main-transition"
+        routerLinkActive="active"
+        [routerLink]="nav.link"
+        >{{ nav.title + " Details" }}</a
+      >
+    </li>
+    }
+  </ul>
+</nav>
