@@ -11,6 +11,4 @@ import { FooterComponent } from './layouts/footer/footer.component';
   templateUrl: './app.component.html',
   styleUrl: './app.component.scss',
 })
-export class AppComponent {
-  title = 'currency-exchanger';
-}
+export class AppComponent {}
