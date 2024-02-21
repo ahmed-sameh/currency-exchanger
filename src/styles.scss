@@ -67,8 +67,16 @@ button:focus-visible {
   color: rgb(var(--main-color));
 }
 
+.dark-color {
+  color: #1e1e1e;
+}
+
 .main-bg-color {
   background-color: rgb(var(--main-color));
+}
+
+.font-bold {
+  font-weight: 800;
 }
 
 .container {

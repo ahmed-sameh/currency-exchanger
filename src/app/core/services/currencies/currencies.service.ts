@@ -1,73 +1,70 @@
 import { Injectable } from '@angular/core';
-import { HttpClientService } from '../http/http.service';
 import { CachingService } from '../caching/caching.service';
-import { ICurrencyData } from '../../models/currency.model';
+import { HttpClient } from '@angular/common/http';
+import { NetworkService } from '../network/network.service';
+import { Subject, of, tap } from 'rxjs';
 
 @Injectable({ providedIn: 'root' })
 export class CurrenciesService {
-  currenciesList = [];
+  currenciesList;
+
   currentCurrency;
   token = 'ad7adfde55-138dc063ec-s92m78';
+  allCurrencyRatesSub = new Subject<{
+    base: string;
+    results: any;
+    amount: number;
+  }>();
 
   constructor(
     private cachingService: CachingService,
-    private http: HttpClientService
+    private http: HttpClient,
+    private networkService: NetworkService
   ) {}
 
   getAllCurrencies() {
-    return this.http.get('currencies');
-  }
-
-  getUpdatedCurrencies(options: ICurrencyData) {
-    return this.http.get('settings/currencies');
-  }
-
-  public setCurrency(currency) {
-    this.cachingService.set('currency', currency.currency_code_en);
-    this.currentCurrency = currency;
-  }
-
-  getCurrency() {
-    let allCurrencies;
-    if (this.cachingService.isKeyExist('currenciesList')) {
-      allCurrencies = this.cachingService.get('currenciesList') as any[];
+    if (this.currenciesList) {
+      return of(this.currenciesList);
     } else {
-      this.getUpdatedCurrencies({ return_all: 1 }).subscribe(
-        (res) => (allCurrencies = res.data)
+      return this.http.get(this.networkService.urlHandler('currencies')).pipe(
+        tap((res: any) => {
+          this.currenciesList = res;
+        })
       );
     }
-
-    this.currentCurrency =
-      allCurrencies.find(
-        (el) => el.currency_code_en == this._CurrenctCurrency
-      ) || allCurrencies.find((el) => el.currency_code_en == 'USD');
-
-    return this.currentCurrency;
   }
 
-  moneyExchange(money: number, extchangeCase: 'from$' | 'to$') {
-    const exchangeRate = this.getCurrency().exchange_rate;
-    switch (extchangeCase) {
-      case 'from$':
-        return +money * +exchangeRate;
-      case 'to$':
-        return +money / +exchangeRate;
-    }
-  }
-
-  get _CurrenctCurrency(): string {
-    if (!this.cachingService.isKeyExist('currency')) {
-      this.setCurrency('USD');
-      return 'USD';
-    }
-
-    const currentCurrency = this.cachingService.get('currency');
-
-    if (currentCurrency && currentCurrency != undefined) {
-      return currentCurrency as string;
+  getCurrencyAllRates(currency) {
+    const lastCurrencyRatesCache = this.cachingService.isKeyExist(
+      'lastCurrencyRates'
+    )
+      ? this.cachingService.get('lastCurrencyRates')
+      : null;
+    if (
+      lastCurrencyRatesCache &&
+      currency.from == lastCurrencyRatesCache['base']
+    ) {
+      return of(lastCurrencyRatesCache);
     } else {
-      this.setCurrency('USD');
-      return 'USD';
+      return this.http
+        .get(this.networkService.urlHandler('/fetch-all', currency))
+        .pipe(
+          tap((res) => {
+            this.cachingService.set('lastCurrencyRates', res);
+          })
+        );
     }
+  }
+
+  getCurrencyRate(currencies) {
+    return this.http.get(
+      this.networkService.urlHandler('/fetch-one', currencies)
+    );
+  }
+
+  getRateHistory(currencies) {
+    return this.http.get(
+      this.networkService.urlHandler('/time-series', currencies)
+    );
   }
 }

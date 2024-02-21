@@ -1,0 +1,36 @@
+<div class="container">
+  <header>
+    @if (FromCurrency && ToCurrency) {
+
+    <h1>
+      {{ FromCurrency }} -
+      {{ ToCurrency }}
+    </h1>
+    }@else {
+    <h1 class="main-color">Please Select Currencies</h1>
+    }
+
+    <a [routerLink]="['/home']" class="home-link main-transition">Home</a>
+  </header>
+  <app-exchanger
+    [list]="currenciesList"
+    [isDetails]="true"
+    [from]="currenciesKeys?.fromCurrency"
+    [to]="currenciesKeys?.toCurrency"
+  ></app-exchanger>
+  <section id="currencyGraph">
+    <h1>Rate History</h1>
+
+    <apx-chart
+      class="apex-charts"
+      dir="ltr"
+      [series]="chartConfig?.series"
+      [chart]="chartConfig?.chart"
+      [xaxis]="chartConfig?.xaxis"
+      [colors]="chartConfig?.colors"
+      [stroke]="chartConfig?.stroke"
+      [dataLabels]="chartConfig?.dataLabels"
+    >
+    </apx-chart>
+  </section>
+</div>

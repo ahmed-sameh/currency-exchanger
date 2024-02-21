@@ -1,174 +1,64 @@
-import { Component, OnInit } from '@angular/core';
+import { Component, OnDestroy, OnInit } from '@angular/core';
 import { ExchangerComponent } from '../../shared/components/exchanger/exchanger.component';
 import { CurrenciesService } from '../../core/services/currencies/currencies.service';
-import { take } from 'rxjs';
-import { KeyValuePipe, SlicePipe } from '@angular/common';
+import { Subscription, take } from 'rxjs';
+import {
+  CommonModule,
+  DecimalPipe,
+  KeyValuePipe,
+  SlicePipe,
+} from '@angular/common';
+import { ActivatedRoute } from '@angular/router';
 
 @Component({
   selector: 'app-home',
   standalone: true,
-  imports: [ExchangerComponent, KeyValuePipe, SlicePipe],
+  imports: [
+    CommonModule,
+    ExchangerComponent,
+    KeyValuePipe,
+    SlicePipe,
+    DecimalPipe,
+  ],
   templateUrl: './home.component.html',
   styleUrl: './home.component.scss',
 })
-export class HomeComponent implements OnInit {
-  currenciesList = {
-    AED: 'United Arab Emirates Dirham',
-    AFN: 'Afghan Afghani',
-    ALL: 'Albanian Lek',
-    AMD: 'Armenian Dram',
-    ANG: 'Dutch Guilders',
-    AOA: 'Angolan Kwanza',
-    ARS: 'Argentine Peso',
-    AUD: 'Australian Dollar',
-    AWG: 'Aruban Florin',
-    AZN: 'Azerbaijani Manat',
-    BAM: 'Bosnia-Herzegovina Convertible Mark',
-    BBD: 'Barbadian Dollar',
-    BDT: 'Bangladeshi Taka',
-    BGN: 'Bulgarian Lev',
-    BHD: 'Bahraini Dinar',
-    BIF: 'Burundian Franc',
-    BMD: 'Bermudian Dollar',
-    BND: 'Bruneian Dollar',
-    BOB: 'Bolivian Boliviano',
-    BRL: 'Brazilian Real',
-    BSD: 'Bahamian Dollar',
-    BTN: 'Bhutanese Ngultrum',
-    BWP: 'Botswanan Pula',
-    BZD: 'Belizean Dollar',
-    CAD: 'Canadian Dollar',
-    CDF: 'Congolese Franc',
-    CHF: 'Swiss Franc',
-    CLF: 'Chilean Unit of Account UF',
-    CLP: 'Chilean Peso',
-    CNH: 'Chinese Yuan Offshore',
-    CNY: 'Chinese Yuan',
-    COP: 'Colombian Peso',
-    CUP: 'Cuban Peso',
-    CVE: 'Cape Verdean Escudo',
-    CZK: 'Czech Republic Koruna',
-    DJF: 'Djiboutian Franc',
-    DKK: 'Danish Krone',
-    DOP: 'Dominican Peso',
-    DZD: 'Algerian Dinar',
-    EGP: 'Egyptian Pound',
-    ERN: 'Eritrean Nakfa',
-    ETB: 'Ethiopian Birr',
-    EUR: 'Euro',
-    FJD: 'Fijian Dollar',
-    FKP: 'Falkland Islands Pound',
-    GBP: 'British Pound Sterling',
-    GEL: 'Georgian Lari',
-    GHS: 'Ghanaian Cedi',
-    GIP: 'Gibraltar Pound',
-    GMD: 'Gambian Dalasi',
-    GNF: 'Guinean Franc',
-    GTQ: 'Guatemalan Quetzal',
-    GYD: 'Guyanaese Dollar',
-    HKD: 'Hong Kong Dollar',
-    HNL: 'Honduran Lempira',
-    HRK: 'Croatian Kuna',
-    HTG: 'Haitian Gourde',
-    HUF: 'Hungarian Forint',
-    IDR: 'Indonesian Rupiah',
-    ILS: 'Israeli New Sheqel',
-    INR: 'Indian Rupee',
-    IQD: 'Iraqi Dinar',
-    IRR: 'Iranian Rial',
-    ISK: 'Icelandic Krona',
-    JMD: 'Jamaican Dollar',
-    JOD: 'Jordanian Dinar',
-    JPY: 'Japanese Yen',
-    KES: 'Kenyan Shilling',
-    KGS: 'Kyrgystani Som',
-    KHR: 'Cambodian Riel',
-    KMF: 'Comorian Franc',
-    KPW: 'North Korean Won',
-    KRW: 'South Korean Won',
-    KWD: 'Kuwaiti Dinar',
-    KYD: 'Caymanian Dollar',
-    KZT: 'Kazakhstani Tenge',
-    LAK: 'Laotian Kip',
-    LBP: 'Lebanese Pound',
-    LKR: 'Sri Lankan Rupee',
-    LRD: 'Liberian Dollar',
-    LSL: 'Basotho Maloti',
-    LYD: 'Libyan Dinar',
-    MAD: 'Moroccan Dirham',
-    MDL: 'Moldovan Leu',
-    MGA: 'Malagasy Ariary',
-    MKD: 'Macedonian Denar',
-    MMK: 'Myanma Kyat',
-    MNT: 'Mongolian Tugrik',
-    MOP: 'Macanese Pataca',
-    MRU: 'Mauritanian Ouguiya',
-    MUR: 'Mauritian Rupee',
-    MVR: 'Maldivian Rufiyaa',
-    MWK: 'Malawian Kwacha',
-    MXN: 'Mexican Peso',
-    MYR: 'Malaysian Ringgit',
-    MZN: 'Mozambican Metical',
-    NAD: 'Namibian Dollar',
-    NGN: 'Nigerian Naira',
-    NOK: 'Norwegian Krone',
-    NPR: 'Nepalese Rupee',
-    NZD: 'New Zealand Dollar',
-    OMR: 'Omani Rial',
-    PAB: 'Panamanian Balboa',
-    PEN: 'Peruvian Nuevo Sol',
-    PGK: 'Papua New Guinean Kina',
-    PHP: 'Philippine Peso',
-    PKR: 'Pakistani Rupee',
-    PLN: 'Polish Zloty',
-    PYG: 'Paraguayan Guarani',
-    QAR: 'Qatari Rial',
-    RON: 'Romanian Leu',
-    RSD: 'Serbian Dinar',
-    RUB: 'Russian Ruble',
-    RWF: 'Rwandan Franc',
-    SAR: 'Saudi Arabian Riyal',
-    SCR: 'Seychellois Rupee',
-    SDG: 'Sudanese Pound',
-    SEK: 'Swedish Krona',
-    SGD: 'Singapore Dollar',
-    SHP: 'Saint Helena Pound',
-    SLL: 'Sierra Leonean Leone',
-    SOS: 'Somali Shilling',
-    SRD: 'Surinamese Dollar',
-    SYP: 'Syrian Pound',
-    SZL: 'Swazi Emalangeni',
-    THB: 'Thai Baht',
-    TJS: 'Tajikistani Somoni',
-    TMT: 'Turkmenistani Manat',
-    TND: 'Tunisian Dinar',
-    TOP: "Tongan Pa'anga",
-    TRY: 'Turkish Lira',
-    TTD: 'Trinidad and Tobago Dollar',
-    TWD: 'Taiwan New Dollar',
-    TZS: 'Tanzanian Shilling',
-    UAH: 'Ukrainian Hryvnia',
-    UGX: 'Ugandan Shilling',
-    USD: 'United States Dollar',
-    UYU: 'Uruguayan Peso',
-    UZS: 'Uzbekistan Som',
-    VND: 'Vietnamese Dong',
-    VUV: 'Ni-Vanuatu Vatu',
-    WST: 'Samoan Tala',
-    XAF: 'CFA Franc BEAC',
-    XCD: 'East Caribbean Dollar',
-    XDR: 'Special Drawing Rights',
-    XOF: 'CFA Franc BCEAO',
-    XPF: 'CFP Franc',
-    YER: 'Yemeni Rial',
-    ZAR: 'South African Rand',
-    ZMW: 'Zambian Kwacha',
-  };
-  currencies = [];
-  constructor(private currenciesService: CurrenciesService) {}
+export class HomeComponent implements OnInit, OnDestroy {
+  currenciesList;
+  allCurrenciesRatesSub: Subscription;
+  popularCurrenciesRates;
+  currenciesQparamsSub: Subscription;
+  currenciesFromKey: string;
+  currenciesToKey: string;
+  FromCurrency;
+  ToCurrency;
+  exchangeAmount;
+  constructor(
+    private currenciesService: CurrenciesService,
+
+    private route: ActivatedRoute
+  ) {}
 
   ngOnInit(): void {
-    // this.getAllCurrencies();
+    this.getAllCurrencies();
+    this.popularCurrenciesHandler();
+  }
+
+  getFromToCurrencies() {
+    this.currenciesQparamsSub = this.route.queryParams.subscribe(
+      (qparams: { from: string; to: string }) => {
+        if (qparams) {
+          this.currenciesFromKey = qparams.from;
+          this.currenciesToKey = qparams.to;
+          this.viewHandler();
+        }
+      }
+    );
+  }
+
+  viewHandler() {
+    this.FromCurrency = this.currenciesList[this.currenciesFromKey] || 'EUR';
+    this.ToCurrency = this.currenciesList[this.currenciesToKey] || 'USD';
   }
 
   getAllCurrencies() {
@@ -176,7 +66,27 @@ export class HomeComponent implements OnInit {
       .getAllCurrencies()
       .pipe(take(1))
       .subscribe({
-        next: (res) => console.log(res),
+        next: (res) => {
+          this.currenciesList = res.currencies;
+          this.getFromToCurrencies();
+        },
       });
+  }
+
+  popularCurrenciesHandler() {
+    this.allCurrenciesRatesSub =
+      this.currenciesService.allCurrencyRatesSub.subscribe((res) => {
+        this.popularCurrenciesRates = res.results;
+        this.exchangeAmount = res.amount;
+      });
+  }
+
+  getKeyAsString(key: any) {
+    return `${key}`;
+  }
+
+  ngOnDestroy(): void {
+    this.currenciesQparamsSub.unsubscribe();
+    this.allCurrenciesRatesSub.unsubscribe();
   }
 }

@@ -1,35 +1,20 @@
 import { Injectable } from '@angular/core';
-import { Observable } from 'rxjs';
-import { HttpClient } from '@angular/common/http';
-import { urlSettings } from '../../settings/urlSettings';
 
-@Injectable({ providedIn: 'root' })
-export class HttpClientService {
-  constructor(private http: HttpClient) {}
+@Injectable({
+  providedIn: 'root',
+})
+export class NetworkService {
+  constructor() {}
 
-  fullRequestURL(resource: string | number): string {
-    // return urlSettings.baseUrl + this.lng + '/v1/' + resource;
-    return urlSettings.baseUrl + resource;
-  }
-
-  /**
-   * basic http get request with headers.
-   * @param resource the entity resource param. ex: system/'connect', user/'login'
-   * @return http json response
-   */
-  get(resource?: string | number, params?: {}): Observable<any> {
+  urlHandler(resource?: string | number, params?: {}) {
     if (params) {
-      resource += this.getArgs(params);
+      const fullURL = (resource += this.getArgs(params));
+      return `https://api.fastforex.io/${fullURL}`;
+    } else {
+      return `https://api.fastforex.io/${resource}`;
     }
-    console.log(this.fullRequestURL(resource));
-    return this.http.get(this.fullRequestURL(resource));
   }
 
-  /**
-   * Serializin arguments as a string
-   * @param options object of Backend parametars to serialize
-   * @return string of parameters
-   */
   getArgs(options: any): string {
     if (!options) {
       return '';
@@ -41,12 +26,6 @@ export class HttpClientService {
     return args;
   }
 
-  /**
-   * serializing eatch option
-   * @param key option key
-   * @param value option value
-   * @return single option serilization
-   */
   optionToString(key: string, value: any): string {
     if (value == null || value == undefined) {
       return '';
@@ -70,10 +49,6 @@ export class HttpClientService {
     return str;
   }
 
-  /**
-   * serializing the object keys
-   * @param obj object to serialize
-   */
   private serializeObject(obj: any, parentSerialized: string): string {
     var str = '';
     Object.keys(obj).forEach((key, index) => {

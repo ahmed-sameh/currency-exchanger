@@ -2,36 +2,91 @@
   <div class="amount-details">
     <div class="input-holder">
       <label for="amount">Amount</label>
-      <input type="number" id="amount" name="amount" placeholder="50 $" />
+      <input
+        type="number"
+        id="amount"
+        name="amount"
+        min="1"
+        placeholder="50 $"
+        [(ngModel)]="amout"
+      />
     </div>
 
-    <div class="exchange-rate">1.00 EUR = XX XX USD</div>
+    <p class="error-text" [style.display]="error ? 'block' : 'none'">
+      Please Fill Inputs
+    </p>
+
+    <div class="exchange-rate">
+      {{
+        "1.00 " +
+          (from || "EUR") +
+          " = " +
+          (currencyRate || "XX.XX") +
+          " " +
+          (to || "USD")
+      }}
+    </div>
   </div>
 
   <div class="resualt-details">
     <div class="inputs">
       <div class="input-holder">
         <label for="from">From</label>
-        <select name="form" id="form">
-          <option value="usd">USD</option>
-          <option value="eur">EUR</option>
+        <select
+          name="form"
+          id="form"
+          [disabled]="isDetails"
+          (change)="currenciesInputsChangeHandler('from', $event)"
+        >
+          @for (currency of list | keyvalue; track $index) {
+          <option [value]="currency.key" [selected]="currency.key == from">
+            {{ currency.value }}
+          </option>
+          }
         </select>
       </div>
       <img src="assets/images/arrow.webp" alt="arrow image" />
 
       <div class="input-holder">
         <label for="to">To</label>
-        <select name="to" id="to">
-          <option value="usd">USD</option>
-          <option value="eur">EUR</option>
+        <select
+          name="to"
+          id="to"
+          (change)="currenciesInputsChangeHandler('to', $event)"
+        >
+          @for (currency of list | keyvalue; track $index) {
+          <option [value]="currency.key" [selected]="currency.key == to">
+            {{ currency.value }}
+          </option>
+          }
         </select>
       </div>
     </div>
 
-    <button type="button" class="convert-btn main-transition">Convert</button>
+    <button
+      type="button"
+      class="convert-btn main-transition"
+      (click)="convertHandler()"
+    >
+      Convert
+    </button>
     <div class="resault-container">
-      <div class="resualt">XXXX USD</div>
-      <button type="button" class="details-btn main-transition">Details</button>
+      <div class="resualt">
+        {{
+          (amout && currencyRate ? (amout * currencyRate | number) : "XX XX") +
+            " " +
+            to
+        }}
+      </div>
+
+      @if (!isDetails && from && to ) {
+      <a
+        type="button"
+        class="details-btn main-transition"
+        [routerLink]="['/details', from, to]"
+        >Details</a
+      >
+      }
     </div>
   </div>
 </section>

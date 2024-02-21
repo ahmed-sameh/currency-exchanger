@@ -1,6 +1,10 @@
 <section class="container">
   <h1>Currency Exchanger</h1>
-  <app-exchanger></app-exchanger>
+  <app-exchanger
+    [list]="currenciesList"
+    [from]="currenciesFromKey || 'EUR'"
+    [to]="currenciesToKey || 'USD'"
+  ></app-exchanger>
 
   <h1>Most Popular Currencies</h1>
   <section id="popular-currencies">
@@ -11,7 +15,30 @@
         {{ currency.value }}
       </h3>
 
-      <p>{{ currency.key }}</p>
+      <p class="main-color font-bold">
+        {{
+          "1 " +
+            (currenciesFromKey || "EUR") +
+            " = " +
+            (popularCurrenciesRates
+              ? popularCurrenciesRates[getKeyAsString(currency.key)]
+              : "XX XX") +
+            " " +
+            currency.key
+        }}
+      </p>
+
+      <h2 class="dark-color font-bold">
+        {{
+          (exchangeAmount &&
+          popularCurrenciesRates[getKeyAsString(currency.key)]
+            ? (exchangeAmount *
+                popularCurrenciesRates[getKeyAsString(currency.key)] | number)
+            : "XX XX") +
+            " " +
+            currency.key
+        }}
+      </h2>
     </div>
     }
   </section>

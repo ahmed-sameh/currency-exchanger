@@ -18,11 +18,11 @@ export class NavbarComponent implements OnInit {
   navItems = [
     {
       title: 'EUR-USD',
-      link: 'usd',
+      link: 'details/EUR/USD',
     },
     {
       title: 'EUR-GBP',
-      link: 'gbp',
+      link: 'details/EUR/GBP',
     },
   ];
   constructor() {}
