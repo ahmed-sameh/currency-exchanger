@@ -30,7 +30,7 @@ export class Interceptor implements HttpInterceptor {
     next: HttpHandler
   ): Observable<HttpEvent<any>> {
     let request = req.clone({
-      params: req.params.set('api_key', 'ad7adfde55-138dc063ec-s92m78'),
+      params: req.params.set('api_key', 'ed693c39f6-8f90d54a3d-s9gdyk'),
     });
     this.requests.push(req);
     this.loaderService.isLoading.next(true);
