@@ -9,7 +9,7 @@ export class CurrenciesService {
   currenciesList;
 
   currentCurrency;
-  token = 'ed693c39f6-8f90d54a3d-s9gdyk';
+  token = '77c54cdc5f-f8e3ad0cbb-s9vbt0';
   allCurrencyRatesSub = new Subject<{
     base: string;
     results: any;
